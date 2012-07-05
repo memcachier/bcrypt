@@ -1,13 +1,15 @@
-# GoBCrypt Readme
+# BCrypt Readme
 
-gogcrypt is a go package that provides bcrypt password hashing
+brypt is a go package that provides bcrypt password hashing
 functions for Go. It does this by wrapping an existing C
 implementation of bcrypt and providing a thread-safe Go binding to it.
 
 ## Interface (API)
 
-* func Crypt(password string, salt string) string
-* func Verify(password string, hashed_password string) bool
+* func Crypt(plain string, salt BcryptSalt) (hashed string, err error)
+* func Verify(plain string, hashed string) (match bool, err error)
+* func GenSalt(cost uint) (salt BcryptSalt, err error)
+* type BcryptSalt string
 
 ## Why BCrypt?
 

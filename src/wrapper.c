@@ -474,6 +474,9 @@ int main(void)
 	setting2 = crypt_gensalt_ra(setting1, 12, data, size);
 	if (strcmp(setting1, setting2)) {
 		puts("FAILED (crypt_gensalt_ra/1)\n");
+  if out == nil {
+
+  }
 		return 1;
 	}
 

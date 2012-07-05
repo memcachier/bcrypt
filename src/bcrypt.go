@@ -26,8 +26,17 @@ import (
   "unsafe"
 )
 
+// Salt is a specially formatted string, so we use a new type to make users
+// aware f this.
+// e.g.,
+//   salt     = '$2a$10$vI8aWBnW3fID.ZQ4/zo1G.'
+//   version  = '2a'
+//   cost     = '10'
+//   random   = 'vI8aWBnW3fID.ZQ4/zo1G.'
+type BcryptSalt string
+
 const (
-  default_cost = 10
+  DEFAULT_COST = 10
   min_cost = 4
   salt_length = 16
 
@@ -36,46 +45,61 @@ const (
 )
 
 // Crypt encrypts a plain text password with given salt.
-func Crypt(password string, salt string) string {
+func Crypt(plain string, salt BcryptSalt) (hashed string, err error) {
+  cpass  := C.CString(password)
+  defer C.free(unsafe.Pointer(cpass))
+  csalt  := C.CString(string(salt))
+  defer C.free(unsafe.Pointer(csalt))
   data   := C.malloc(C.CRYPT_OUTPUT_SIZE)
-  out, _ := C.crypt_r(C.CString(password), C.CString(salt), data)
-  result := C.GoString(out)
-  C.free(data)
-  return result
+  defer C.free(data)
+
+  out, err := C.crypt_r(cpass, csalt, data)
+  if err != nil {
+    return
+  }
+
+  hash = C.GoString(out)
+  return
 }
 
 // Verify checks if a plain text password matches a bcrypt encrypted password.
-func Verify(password string, hashed_password string) bool {
-  return Crypt(password, hashed_password) == hashed_password
-}
-
-// GenSaltDefault generates a new salt with a default work factor.
-func GenSaltDefault() (salt string, err error) {
-  return GenSalt(default_cost)
+func Verify(plain string, hashed string) (match bool, err error) {
+  cipher, err := Crypt(password, BcryptSalt(hashed_password))
+  if err != nil {
+    return
+  }
+  match = cipher == hashed_password
+  return
 }
 
 // GenSalt generates a valid salt with the work factor given. Note the cost is
 // an exponential factor.
-func GenSalt(cost uint) (salt string, err error) {
+func GenSalt(cost uint) (salt BcryptSalt, err error) {
   if (cost < min_cost) {
     cost = min_cost
   }
 
   // generate random bytes
   r := make([]byte, salt_length)
-  l, err := rand.Read(r)
+  _, err = rand.Read(r)
   if err != nil {
-    return "", err
-  }
-  if l != salt_length {
-    return "", nil // TODO: Return correct error
+    return
   }
 
-  out, _ := C.crypt_gensalt_ra(C.CString(salt_prefix), C.ulong(cost),
-    C.CString(string(r)), C.int(salt_length))
-  // TODO: check for null
-  result := C.GoString(out)
-  C.free(unsafe.Pointer(out))
-  return result, nil
+  // crand := C.CString(string(r))
+  // defer C.free(unsafe.Pointer(crand))
+  crand := (*C.char)(unsafe.Pointer(&r[0]))
+  csalt := C.CString(salt_prefix)
+  defer C.free(unsafe.Pointer(csalt))
+
+  out, err := C.crypt_gensalt_ra(csalt, C.ulong(cost), crand, C.int(salt_length))
+  defer C.free(unsafe.Pointer(out))
+
+  if err != nil {
+    return
+  }
+
+  salt = BcryptSalt(C.GoString(out))
+  return
 }
 

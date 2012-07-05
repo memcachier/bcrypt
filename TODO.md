@@ -5,11 +5,9 @@
 Have:
 * func Crypt(password string, salt string) string
 * func Verify(password string, hashed_password string) bool
-* func GenSaltDefault() (salt string, err error)
 * func GenSalt(cost int) (salt string, err error)
 
 Want?
-* func Crypt(password string) string
 * A type that is initialized (will basically generate a salt and reuse
   for all passwords)....?
 * []byte interface versions?
@@ -18,9 +16,6 @@ Want?
 
 * Use subtle package & do comparison at byte level:
   http://golang.org/pkg/crypto/subtle/
-* Verify salt in Crypt function?
-* Test error cases (e.g., return from C land...)
-* Tests!
 * May be better to have a C wrapper first instead of doing malloc and
   co in Go...
 * Test performance of various entry options: e.g crypt_r Vs. crypt_ra
