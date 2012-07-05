@@ -6,10 +6,12 @@ implementation of bcrypt and providing a thread-safe Go binding to it.
 
 ## Interface (API)
 
-* func Crypt(plain string, salt BcryptSalt) (hashed string, err error)
-* func Verify(plain string, hashed string) (match bool, err error)
-* func GenSalt(cost uint) (salt BcryptSalt, err error)
-* type BcryptSalt string
+~~~~ {.go}
+func Crypt(plain string, salt BcryptSalt) (hashed string, err error)
+func Verify(plain string, hashed string) (match bool, err error)
+func GenSalt(cost uint) (salt BcryptSalt, err error)
+type BcryptSalt string
+~~~~
 
 ## Why BCrypt?
 
