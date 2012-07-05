@@ -3,17 +3,17 @@
 all: build
 .PHONY: all
 
-build: src/*
-	cd src && go build
+build: *.go *.c *.h
+	go build
 
 clean:
-	cd src && go clean
+	go clean
 .PHONY: clean
 
 test: build
-	cd src && go test
+	go test
 .PHONY: test
 
-install: src/*
-	cd src && go install
+install: build
+	go install
 

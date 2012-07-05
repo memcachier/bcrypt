@@ -46,7 +46,7 @@ const (
 
 // Crypt encrypts a plain text password with given salt.
 func Crypt(plain string, salt BcryptSalt) (hashed string, err error) {
-  cpass  := C.CString(password)
+  cpass  := C.CString(plain)
   defer C.free(unsafe.Pointer(cpass))
   csalt  := C.CString(string(salt))
   defer C.free(unsafe.Pointer(csalt))
@@ -58,17 +58,17 @@ func Crypt(plain string, salt BcryptSalt) (hashed string, err error) {
     return
   }
 
-  hash = C.GoString(out)
+  hashed = C.GoString(out)
   return
 }
 
 // Verify checks if a plain text password matches a bcrypt encrypted password.
 func Verify(plain string, hashed string) (match bool, err error) {
-  cipher, err := Crypt(password, BcryptSalt(hashed_password))
+  cipher, err := Crypt(plain, BcryptSalt(hashed))
   if err != nil {
     return
   }
-  match = cipher == hashed_password
+  match = cipher == hashed
   return
 }
 
