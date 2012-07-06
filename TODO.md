@@ -21,6 +21,7 @@ Want?
 * Test performance of various entry options: e.g crypt_r Vs. crypt_ra
   Vs. a new entry point that allocates the working space on the stack
   instead of heap.
+* Write a test that checks for memory leaks
 
 # Resources for learning:
 
