@@ -1,6 +1,6 @@
 # BCrypt Readme
 
-brypt is a go package that provides bcrypt password hashing
+BCrypt is a go package that provides bcrypt password hashing
 functions for Go. It does this by wrapping an existing C
 implementation of bcrypt and providing a thread-safe Go binding to it.
 
@@ -32,9 +32,20 @@ The vast bulk of this package is the C implementation of bcrypt
 (version 1.2). This was written by Solar Design
 (http://www.openwall.com/crypt/).
 
+## Get involved!
+
+We are happy to receive bug reports, fixes, documentation enhancements,
+and other improvements.
+
+Please report bugs via the
+[github issue tracker](http://github.com/memcachier/bcrypt/issues).
+
+Master [git repository](http://github.com/memcachier/bcrypt):
+
+* `git clone git://github.com/memcachier/examples-bcrypt.git`
+
 ## License
 
 * This library is released under the BSD-3 licence.
-* The OpenWall C BCrypt library (version 1.2) is released under the
-  public domain.
+* The OpenWall C BCrypt library (version 1.2) is public domain.
 
