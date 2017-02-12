@@ -42,7 +42,7 @@ Please report bugs via the
 
 Master [git repository](http://github.com/memcachier/bcrypt):
 
-* `git clone git://github.com/memcachier/examples-bcrypt.git`
+* `git clone git://github.com/memcachier/bcrypt.git`
 
 ## License
 
